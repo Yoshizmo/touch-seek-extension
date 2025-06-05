@@ -278,6 +278,21 @@
         video.addEventListener('pause', () => showOverlay(overlayContainer));
         video.addEventListener('seeking', () => showOverlay(overlayContainer));
         
+        // Add touch events for mobile/touch devices
+        video.addEventListener('touchstart', () => showOverlay(overlayContainer));
+        video.addEventListener('touchmove', () => showOverlay(overlayContainer));
+        
+        // For Twitch specifically, add touch listeners to the container and document
+        if (window.location.hostname.includes('twitch.tv')) {
+            container.addEventListener('touchstart', () => showOverlay(overlayContainer));
+            container.addEventListener('touchmove', () => showOverlay(overlayContainer));
+            // When in fullscreen, the document may need to capture touch events
+            document.addEventListener('touchstart', () => {
+                const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+                if (isFullscreen) showOverlay(overlayContainer);
+            });
+        }
+        
         if (OVERLAY_SHOW_ON_HOVER) {
             video.addEventListener('mousemove', () => showOverlay(overlayContainer));
             overlayContainer.addEventListener('mousemove', () => showOverlay(overlayContainer));
